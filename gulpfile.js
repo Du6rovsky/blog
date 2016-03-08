@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     minifyCSS = require('gulp-minify-css'),
     source = require('vinyl-source-stream'),
-	bundle = browserify('./src/app.js').bundle();
+    imageop = require('gulp-image-optimization'),
+    bundle = browserify('./src/app.js').bundle();
 
 // Jade to html task.
 gulp.task('jade', function(){
@@ -42,10 +43,19 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('./build/css/'));
 });
 
+//Images optimizer task
+gulp.task('images', function(cb) {
+    gulp.src(['src/img/**/*.png','src/img/**/*.jpg','src/img/**/*.gif','src/img/**/*.jpeg']).pipe(imageop({
+        optimizationLevel: 5,
+        progressive: true,
+        interlaced: true
+    })).pipe(gulp.dest('./build/img')).on('end', cb).on('error', cb);
+});
+
 // Fonts task.
 gulp.task('fonts', function() {
-  return gulp.src(['src/css/fonts/*.ttf','src/css/fonts/*.woff','src/css/fonts/*.eot'])
-    .pipe(gulp.dest('./build/css/fonts'));
+  return gulp.src(['src/fonts/*.ttf','src/fonts/*.woff','src/fonts/*.eot', 'src/fonts/*.woff2','src/fonts/*.svg','src/fonts/*.otf'])
+    .pipe(gulp.dest('./build/fonts'));
 });
 
 // JS task.
@@ -58,10 +68,13 @@ gulp.task('browserify', function() {
 
 // Watch task.
 gulp.task('watch', [], function() {
+  gulp.watch(['src/img/**/*.png','src/img/**/*.jpg','src/img/**/*.gif','src/img/**/*.jpeg'],[
+    'images'
+  ]);
   gulp.watch(['src/**/*.less'],[
     'styles'
   ]);
-  gulp.watch(['src/css/fonts/**/*.{ttf,woff,eof,svg}'],[
+  gulp.watch(['src/fonts/**/*.{ttf,woff,woff2,eof,svg,otf}'],[
     'fonts'
   ]);
   gulp.watch(['src/**/*.js', 'build/modules/**/*.js'],[
