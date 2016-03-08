@@ -1,0 +1,27 @@
+.blog
+	span(v-if="posts.length == 0" class="label label-warning") Blog is empty. Please, create a new post.
+	form(v-on:submit="addPost")
+		input(v-model="newPost" class="form-control" type="text" placeholder="Type your post - theme#post" maxlength="140" required)
+	hr
+	ul#posts(class="list-group" v-if="posts.length > 0")
+		.filter(v-if="posts.length > 1")
+			i(class="pull-left fa fa-filter fa-lg")
+			input(
+				v-model="filter"
+				class="form-control"
+				type="text"
+				placeholder="Filter"
+				maxlength="30")
+			hr
+		li(v-for="post in posts | filterBy filter" class="list-group-item")
+			.comments(class="pull-left")
+				i(class="fa fa-comments")
+				{{ post.comments.length }}
+			span.theme(
+				class="label label-success"
+				v-if="post.theme") {{post.theme}}
+			a(
+				v-link="{name: \"post\", params: { postId: post.id }}") {{ post.content }}
+			i.trash(
+				v-on:click="removePost(post.id)"
+				class="pull-right fa fa-trash")

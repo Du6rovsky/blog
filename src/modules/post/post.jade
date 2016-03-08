@@ -1,0 +1,43 @@
+.post(v-for="p in posts | filterBy $route.params.postId")
+	a(
+		href="/blog"
+		class="pull-left")
+		i(class="fa fa-arrow-left fa-lg")
+	i.edit(
+		class="fa fa-pencil-square-o fa-lg"
+		v-on:click="edit = !edit")
+	br
+	h3(
+		v-show="!edit"
+		v-html="p.content")
+		{{p.content}}
+	input(
+		class="form-control"
+		type="text"
+		v-model="p.content"
+		v-on:keyup.enter="edit = false"
+		v-show="edit"
+		minlength="10")
+	span(class="label label-success" v-if="p.theme") {{p.theme}}
+	hr
+	.comments
+		span(
+			v-if="!p.comments[0]"
+			class="label label-warning") Comments are not found. Do you want to be first?<br>
+		form(v-on:submit="addComment($event, $route.params.postId)")
+			input(
+				v-model="newComment"
+				class="form-control"
+				type="text"
+				placeholder="Type your comment"
+				maxlength="60"
+				required)
+		hr
+		ul#comments(class="list-group")
+			li(v-for="comment in p.comments" class="list-group-item")
+				i.comment(
+					class="pull-left fa fa-comment")
+				{{ comment }}
+				i.trash(
+					v-on:click="removeComment(p.id, $index)"
+					class="pull-right fa fa-trash")

@@ -1,0 +1,15 @@
+doctype html
+html
+	head
+		title
+		meta(charset="utf-8" lang="ru")
+		link(href="/build/css/app.css", rel="stylesheet" type="text/css")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="shortcut icon" href="/build/img/favicon.png" type="image/x-icon")
+		link(rel="icon" href="/build/img/favicon.png" type="image/x-icon")
+	body
+		div.container#blog
+			legend
+				h1.text-center Blog web app.
+			router-view
+		script(src="/build/js/bundle.js")
